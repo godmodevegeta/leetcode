@@ -1,13 +1,7 @@
-class Human:
-    species = "H. Sapien"
+li = []
 
-    def __init__(self, name):
-        self.name = name
-        self._age = 0
+for i in range(9):
+    li.append(i + 3)
 
-    def say(self, msg):
-        print("Hi, my name is {name} and {msg}".format(name = self.name, msg = msg))
-    
-    def sing(self):
-        print("Hi there!")
-    
+# print(li)
+print(li[:])
