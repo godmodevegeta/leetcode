@@ -31,8 +31,8 @@ numbers = {'one' : 1, 'two' : 2, 'three' : 3, 'one' : 8, 'one' : 0}
 # valid_dict = {(1,2,3):[1,2,3]}   # Values can be of any type, however.
 # valid_dict = {(1,2,3):'123'}   # Values can be of any type, however.
 
-print(numbers.get('one'))
-print(numbers.get('four','hi'))
-print(numbers.get('four', 6))
+# print(numbers.get('one'))
+# print(numbers.get('four','hi'))
+# print(numbers.get('four', 6))
 
 
