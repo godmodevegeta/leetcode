@@ -17,8 +17,22 @@ li_f = []
 for i in li:
     li_f.append(i + 0.1)
 
-print (li_f)
+# print (li_f)
 
 
 li.extend(li_f)
-print (li)
+# print (li)
+
+# dict
+
+numbers = {'one' : 1, 'two' : 2, 'three' : 3, 'one' : 8, 'one' : 0}
+
+# invalid_dict = {[1,2,3]: "123"}  # => Yield a TypeError: unhashable type: 'list'
+# valid_dict = {(1,2,3):[1,2,3]}   # Values can be of any type, however.
+# valid_dict = {(1,2,3):'123'}   # Values can be of any type, however.
+
+print(numbers.get('one'))
+print(numbers.get('four','hi'))
+print(numbers.get('four', 6))
+
+
