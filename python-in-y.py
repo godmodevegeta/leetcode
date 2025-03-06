@@ -36,3 +36,5 @@ numbers = {'one' : 1, 'two' : 2, 'three' : 3, 'one' : 8, 'one' : 0}
 # print(numbers.get('four', 6))
 
 
+word = "box"
+print(word)
