@@ -35,6 +35,5 @@ numbers = {'one' : 1, 'two' : 2, 'three' : 3, 'one' : 8, 'one' : 0}
 # print(numbers.get('four','hi'))
 # print(numbers.get('four', 6))
 
-
-candies = [4,2,1,1,2, 13]
-print (max(candies))
+lis = [None, 3, None, 4]
+print(len(lis))
