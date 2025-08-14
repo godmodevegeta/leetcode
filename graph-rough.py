@@ -183,3 +183,13 @@ def calcEquation(equations: List[List[str]], values: List[float], queries: List[
 
 
 
+# 463. Island Perimeter
+grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]
+
+def findPerimeter(grid):
+    row, col = len(grid), len(grid[0])
+    for r in range(row):
+        for c in range(col):
+            print(grid[r][c], end="")
+        print()
+findPerimeter(grid)
