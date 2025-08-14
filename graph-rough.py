@@ -182,14 +182,29 @@ def calcEquation(equations: List[List[str]], values: List[float], queries: List[
 # print(calcEquation(equations, values, queries))
 
 
+# 200. Number of Islands
+grid = [
+  ["1","1","0","0","0"],
+  ["1","0","0","1","1"],
+  ["0","0","1","1","0"],
+  ["0","0","0","0","0"],
+  ["1","0","1","0","1"]
+]
 
-# 463. Island Perimeter
-grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]
 
-def findPerimeter(grid):
+def numIslands(grid: List[List[str]]) -> int:
     row, col = len(grid), len(grid[0])
+    visited = set()
+    ans = 0
+    def dfs(r, c):
+        if ((r < 0 or r >= row) or (c < 0 or c >= col) or grid[r][c] == "0" or ((r,c) in visited)): return False
+        visited.add((r,c))
+        dir = [[-1, 0], [0, 1], [0, -1], [1, 0]]
+        for dr, dc in dir:
+            dfs(r + dr,  c + dc)
+        return True
     for r in range(row):
         for c in range(col):
-            print(grid[r][c], end="")
-        print()
-findPerimeter(grid)
+            if dfs(r, c): ans += 1
+    return ans
+print(numIslands(grid))
