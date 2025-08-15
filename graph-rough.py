@@ -207,4 +207,36 @@ def numIslands(grid: List[List[str]]) -> int:
         for c in range(col):
             if dfs(r, c): ans += 1
     return ans
-print(numIslands(grid))
+
+# 695. Max Area of Island
+grid = [
+    [0,0,1,0,0,0,0,1,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1,1,1,0,0,0],
+    [0,1,1,0,1,0,0,0,0,0,0,0,0],
+    [0,1,0,0,1,1,0,0,1,0,1,0,0],
+    [0,1,0,0,1,1,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,1,0,0],
+    [0,0,0,0,0,0,0,1,1,1,0,0,0],
+    [0,0,0,0,0,0,0,1,1,0,0,0,0]
+]
+
+def maxAreaOfIsland(grid: List[List[int]]) -> int:
+    row, col = len(grid), len(grid[0])
+    visited = set()
+    def findArea(r, c) -> int:
+        if (r < 0 or r >= row or c < 0 or c >= col or grid[r][c] == 0 or (r,c) in visited): return 0
+        visited.add((r,c))
+        area = 1
+        directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+        for dr,dc in directions:
+            area += findArea(r + dr, c + dc)
+        return area
+    maxArea = 0
+    for r in range(row):
+        for c in range(col):
+            area = findArea(r,c)
+            maxArea = max(area, maxArea)
+    return maxArea
+    
+print(maxAreaOfIsland(grid))
+
