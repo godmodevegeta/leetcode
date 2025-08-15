@@ -238,5 +238,27 @@ def maxAreaOfIsland(grid: List[List[int]]) -> int:
             maxArea = max(area, maxArea)
     return maxArea
     
-print(maxAreaOfIsland(grid))
+# 994. Rotting Oranges
+grid = [[2,1,1],
+        [1,1,2],
+        [0,1,1]]
 
+def orangesRotting(grid: List[List[int]]) -> int:
+    row, col = len(grid), len(grid[0])
+    visited = set()
+    queue = deque()
+    minTime = 0
+
+    for r in range(row):
+        for c in range(col):
+            if grid[r][c] == 2: 
+                queue.append((r,c))
+                visited.add((r,c))
+    
+    directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+
+    while queue:
+        r,c = queue.popleft()
+
+
+print(orangesRotting(grid))
