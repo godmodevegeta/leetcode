@@ -244,21 +244,33 @@ grid = [[2,1,1],
         [0,1,1]]
 
 def orangesRotting(grid: List[List[int]]) -> int:
+    
     row, col = len(grid), len(grid[0])
+    freshOranges = 0
+    maxTime = 0
     visited = set()
-    queue = deque()
-    minTime = 0
 
+    queue = deque()
     for r in range(row):
         for c in range(col):
+            if grid[r][c] == 1: freshOranges += 1
             if grid[r][c] == 2: 
-                queue.append((r,c))
-                visited.add((r,c))
+                queue.append((r, c, 0))
     
-    directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]
-
     while queue:
-        r,c = queue.popleft()
+        r, c, time = queue.popleft()
+        maxTime = time
+        # print(r, c, time, sep=" () ")
+        directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if (nr >= 0 and nr < row) and (nc >= 0 and nc < col) and grid[nr][nc] == 1 and (nr, nc) not in visited:
+                freshOranges -= 1
+                visited.add((nr, nc))
+                queue.append((nr, nc, time + 1))
+
+    return maxTime if freshOranges == 0 else -1
+    
 
 
 print(orangesRotting(grid))
