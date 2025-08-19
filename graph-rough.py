@@ -273,4 +273,118 @@ def orangesRotting(grid: List[List[int]]) -> int:
     
 
 
-print(orangesRotting(grid))
+# 417. Pacific Atlantic Water Flow (DFS)
+
+heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+
+def pacificAtlantic(heights: List[List[int]]) -> List[List[int]]:
+    row, col = len(heights), len(heights[0])
+    pacific_reachable = set()
+    atlantic_reachable = set()
+
+    def dfs(r,c, visited):
+        if (r >= 0 and r < row and c >= 0 and c < col and (r,c) not in visited):
+
+            visited.add((r,c)) # this cell is reachable from pacific
+            directions = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < row and 0 <= nc < col:
+                    if heights[nr][nc] >= heights[r][c]: dfs(nr, nc, visited)
+
+
+
+    for c in range(col):
+        dfs(0, c, pacific_reachable)
+    for c in range(col):
+        dfs(row - 1, c, atlantic_reachable)
+    for r in range(row):
+        dfs(r, 0, pacific_reachable)
+    for r in range(row):
+        dfs(r, col - 1, atlantic_reachable)
+
+    return [[r, c] for (r, c) in pacific_reachable & atlantic_reachable]
+    
+# 417. Pacific Atlantic Water Flow (BFS)
+
+def pacificAtlantic(heights: List[List[int]]) -> List[List[int]]:
+    row, col = len(heights), len(heights[0])
+    pacific_reachable = set()
+    atlantic_reachable = set()
+    queue = deque()
+
+    # pacific
+    for c in range(col):
+        queue.append((0, c))
+    for r in range(row):
+        queue.append((r, 0))
+        
+    while queue:
+        r,c = queue.popleft()
+        directions = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if (0 <= nr < row and 0 <= nc < col and (nr, nc) not in pacific_reachable and heights[nr][nc] >= heights[r][c]):
+                pacific_reachable.add((nr,nc))
+                queue.append((nr,nc))
+
+
+    # atlantic
+    for c in range(col):
+        queue.append((row - 1, c))
+    for r in range(row):
+        queue.append((r, col - 1))
+        
+    while queue:
+        r,c = queue.popleft()
+        
+        directions = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if (0 <= nr < row and 0 <= nc < col and (nr, nc) not in atlantic_reachable and heights[nr][nc] >= heights[r][c]):
+                atlantic_reachable.add((nr,nc))
+                queue.append((nr,nc))
+
+    return [[r,c] for (r,c) in pacific_reachable & atlantic_reachable]
+
+# 130. Surrounded Regions
+
+board = [["X","X","X","X"],
+         ["X","O","O","X"],
+         ["X","X","O","X"],
+         ["X","O","X","X"]]
+
+def solve(board: List[List[str]]) -> None:
+    """
+    Do not return anything, modify board in-place instead.
+    """
+    row, col = len(board), len(board[0])
+    visited = set()
+    def dfs(r,c):
+        if ((r < 0 or r >= row) or (c < 0 or c >= col) or (r,c) in visited or board[r][c] == "X"):
+            # print(f"Nothing at ({r}, {c})")
+            return
+        visited.add((r,c))
+        # print(f"I'm at ({r},{c})")
+        directions = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if (0 <= nr < row and 0 <= nc < col): dfs(nr,nc)
+    for r in range(row):
+        dfs(r,0)
+        dfs(r,col - 1)
+    for c in range(col):       
+        dfs(0,c)
+        dfs(row - 1, c)
+
+
+    for r in range(row):
+        for c in range(col):
+            if board[r][c] == "O" and (r,c) not in visited: board[r][c] = "X"
+          
+# 207. Course Schedule
+numCourses = 2
+prerequisites = [[1,0]]
+
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    
