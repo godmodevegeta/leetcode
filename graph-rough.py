@@ -383,8 +383,36 @@ def solve(board: List[List[str]]) -> None:
             if board[r][c] == "O" and (r,c) not in visited: board[r][c] = "X"
           
 # 207. Course Schedule
-numCourses = 2
-prerequisites = [[1,0]]
+numCourses = 4
+prerequisites = [[1,0],[2,1],[3,2]]
 
 def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
-    
+    adj = defaultdict(list)
+    for dst, src in prerequisites:
+        adj[src].append(dst)
+
+    visited = {}
+    for i in range(numCourses):
+        visited[i] = 0
+    print(visited)
+    loop_found = False
+    def dfs(node):
+        nonlocal loop_found
+        if visited[node] == 2: return # already traversed in some other graph component
+        if visited[node] == 1: 
+            loop_found = True # recurring node, ie loop found
+            return
+
+        visited[node] = 1 # visited node
+        print(f"The node {node} is status:{visited[node]}")
+        
+        for next in adj[node]:
+            dfs(next)
+        visited[node] = 2
+
+    for node in list(adj.keys()):
+        # print(node)
+        dfs(node)
+    return loop_found
+
+print(canFinish(numCourses, prerequisites))
