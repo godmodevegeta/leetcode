@@ -382,7 +382,7 @@ def solve(board: List[List[str]]) -> None:
         for c in range(col):
             if board[r][c] == "O" and (r,c) not in visited: board[r][c] = "X"
           
-# 207. Course Schedule
+# 207. Course Schedule (3-states)
 numCourses = 4
 prerequisites = [[1,0],[2,1],[3,2]]
 
@@ -415,4 +415,99 @@ def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
         dfs(node)
     return loop_found
 
-print(canFinish(numCourses, prerequisites))
+# 207. Course Schedule (BFS)
+numCourses = 4
+prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    adj = defaultdict(list)
+    for dst, src in prerequisites:
+        adj[src].append(dst)
+
+    in_degree = {}
+    for course in range(numCourses):
+        in_degree[course] = 0
+    for key, item in list(adj.items()):
+        for course in item:
+            in_degree[course] = in_degree.get(course) + 1
+    queue = deque()
+    for course in range(numCourses):
+        if in_degree[course] == 0: queue.append(course)
+    while queue:
+        node = queue.popleft()
+        
+        for next in adj[node]:
+            in_degree[next] = in_degree[next] - 1
+            if in_degree[next] == 0:
+                queue.append(next)
+    for key, val in in_degree.items():
+        if val != 0: return False
+    return True
+
+# 210. Course Schedule II
+
+numCourses = 4
+prerequisites = [[1,0],[2,0],[3,1],[3,2],[0,3]]
+
+def findOrder(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    graph = defaultdict(list)
+    for u,v in prerequisites:
+        graph[v].append(u)
+    state = {}
+    loop_found = False
+    order = []
+    for course in range(numCourses):
+        state[course] = 0
+    def dfs(node):
+        nonlocal loop_found
+        if state[node] == 1:
+            loop_found = True
+            return
+        if state[node] == 2:
+            return
+        state[node] = 1
+        for next in graph[node]:
+            dfs(next)
+        state[node] = 2
+        order.append(node)
+    
+    for course in range(numCourses):
+        dfs(course)
+    print(order[::-1])
+    return loop_found
+    
+# 210. Course Schedule II (Kahn's)
+
+numCourses = 4
+prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+
+def findOrder(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    adj = defaultdict(list)
+    for dst, src in prerequisites:
+        adj[src].append(dst)
+    order = []
+    in_degree = {}
+    for course in range(numCourses):
+        in_degree[course] = 0
+    for key, item in list(adj.items()):
+        for course in item:
+            in_degree[course] = in_degree.get(course) + 1
+    queue = deque()
+    for course in range(numCourses):
+        if in_degree[course] == 0: 
+            queue.append(course)
+            order.append(course)
+    while queue:
+        node = queue.popleft()
+        
+        for next in adj[node]:
+            in_degree[next] = in_degree[next] - 1
+            if in_degree[next] == 0:
+                order.append(next)
+                queue.append(next)
+
+    for key, val in in_degree.items():
+        if val != 0: return []
+    return order
+
+print(findOrder(numCourses, prerequisites))
