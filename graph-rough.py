@@ -105,32 +105,32 @@ def bfs(graph, start):
 
 # print(checkIfPrerequisite(numCourses, prerequisites, queries))
 
-class UnionFind:
-    def __init__(self, n):
-        self.parent = list(range(n))  # or: {i: i for i in range(n)}
-        self.rank = [0] * n           # optional: for union by rank
+# class UnionFind:
+#     def __init__(self, n):
+#         self.parent = list(range(n))  # or: {i: i for i in range(n)}
+#         self.rank = [0] * n           # optional: for union by rank
 
-    def find(self, x):
-        if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])  # path compression
-        return self.parent[x]
+#     def find(self, x):
+#         if self.parent[x] != x:
+#             self.parent[x] = self.find(self.parent[x])  # path compression
+#         return self.parent[x]
 
-    def union(self, x, y):
-        px, py = self.find(x), self.find(y)
-        if px == py:
-            return False  # already in the same set
-        # union by rank (optional optimization)
-        if self.rank[px] < self.rank[py]:
-            self.parent[px] = py
-        elif self.rank[px] > self.rank[py]:
-            self.parent[py] = px
-        else:
-            self.parent[py] = px
-            self.rank[px] += 1
-        return True
+#     def union(self, x, y):
+#         px, py = self.find(x), self.find(y)
+#         if px == py:
+#             return False  # already in the same set
+#         # union by rank (optional optimization)
+#         if self.rank[px] < self.rank[py]:
+#             self.parent[px] = py
+#         elif self.rank[px] > self.rank[py]:
+#             self.parent[py] = px
+#         else:
+#             self.parent[py] = px
+#             self.rank[px] += 1
+#         return True
 
-    def connected(self, x, y):
-        return self.find(x) == self.find(y)
+    # def connected(self, x, y):
+    #     return self.find(x) == self.find(y)
     
 accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],
             ["John","johnsmith@mail.com","john00@mail.com"],
@@ -510,4 +510,69 @@ def findOrder(numCourses: int, prerequisites: List[List[int]]) -> bool:
         if val != 0: return []
     return order
 
-print(findOrder(numCourses, prerequisites))
+# 684. Redundant Connection (DSU begins)
+edges = [[1,4],[3,4],[1,3],[1,2],[4,5]]
+edges = [[3,4],[1,2],[2,4],[3,5],[2,5]]
+edges = [[1,2],[2,3],[3,4],[4,1]]
+
+def findRedundantConnection(edges: List[List[int]]) -> List[int]:
+    graph = defaultdict(list)
+    for u,v in edges:
+        graph[u].append(v)
+        graph[v].append(u)
+    numNodes = max(graph.keys())
+    size = [1 for i in range(numNodes + 1)]
+    parent = [i for i in range(numNodes + 1)]
+    def find(node):
+        if parent[node] != node:
+            parent[node] = find(parent[node])
+        return parent[node]
+    def union(a, b):
+        parent_a = find(a)
+        parent_b = find(b)
+        if find(a) == find(b):
+            return False
+        if size[parent_a] == size[parent_b]:
+            parent[parent_b] = a
+            size[parent_a] += 1
+        elif size[parent_a] > size[parent_b]:
+            parent[parent_b] = a
+            size[parent_a] += 1
+        else:
+            parent[parent_a] = b
+            size[parent_b] += 1
+        return True
+    for u,v in edges:
+        if not union(u,v):
+            return [u,v]
+        
+
+# 127. Word Ladder
+
+beginWord = "hit"
+endWord = "cog"
+wordList = ["hot","dot","dog","lot","log","cog"]
+
+def ladderLength(beginWord: str, endWord: str, wordList: List[str]) -> int:
+    def neighborOf(nodeWord):
+        next_word = []
+        for i in range(len(nodeWord)):
+            for c in range(26):
+                next_word.append(nodeWord[:i] + chr(c + 97) + nodeWord[i + 1:])
+        return(next_word)
+    queue = deque()
+    queue.append((beginWord, 1))
+    visited = set()
+    visited.add(beginWord)
+    while queue:
+        word, steps = queue.popleft()
+        if word == endWord:
+            return steps
+
+        for next_word in neighborOf(word):
+            if next_word in wordList and next_word not in visited:
+                queue.append((next_word, steps + 1))    
+                visited.add(next_word)            
+    
+    
+print(ladderLength(beginWord, endWord, wordList))
