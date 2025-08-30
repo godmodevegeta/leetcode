@@ -575,4 +575,96 @@ def ladderLength(beginWord: str, endWord: str, wordList: List[str]) -> int:
                 visited.add(next_word)            
     
     
-print(ladderLength(beginWord, endWord, wordList))
+# 743. Network Delay Time
+import heapq
+
+times = [[2,1,1],[2,3,1],[3,4,1]]
+n = 4
+k = 2
+def networkDelayTime(times: List[List[int]], n: int, k: int) -> int:
+    graph = defaultdict(list)
+    for u, v, w in times:
+        graph[u].append((v,w))
+    dist = {}
+    for i in range(1, n + 1):
+        dist[i] = float('inf')
+    dist.update({2:0})
+    dist.update(graph[k])
+    # print(dist)
+    pq = []
+    heapq.heappush(pq, (0, k))
+    visited = set()
+    ans = 0
+    while pq:
+        # print(pq)
+        curr_dist, node = heapq.heappop(pq)
+        if node in visited:
+            continue
+        visited.add(node)
+        ans = max(ans, curr_dist)
+        for next, weight in graph[node]:
+            if curr_dist + weight <= dist[next]:
+                dist[next] = curr_dist + weight
+            if next not in visited:
+                heapq.heappush(pq, (dist[next], next))
+    return ans
+
+# 332. Reconstruct Itinerary
+tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"],["SJC","JFK"],["SFO","SFO"]]
+def findItinerary(tickets: List[List[str]]) -> List[str]:
+    graph = defaultdict(list)
+    for _from, _to in tickets:
+        heapq.heappush(graph[_from], _to)
+    ans = []
+    # print(graph)
+    def dfs(node):
+        print(graph)
+        while graph[node]: 
+            next = heapq.heappop(graph[node])
+            dfs(next)
+        ans.append(node)
+    dfs("JFK")
+    print(ans[::-1])
+
+
+# 1584. Min Cost to Connect All Points
+points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+def minCostConnectPoints(points: List[List[int]]) -> int:
+    def distBw(a,b):
+        xi = points[a][0]
+        yi = points[a][1]
+        xj = points[b][0]
+        yj = points[b][1]
+        return abs(xi - xj) + abs(yi - yj)
+        
+    graph = defaultdict(list)
+
+    tree = defaultdict()
+    for i in range(len(points)):
+        tree[i] = (points[i])
+    
+    for i in tree.keys():
+        for j in tree.keys():
+            if i == j: continue
+            heapq.heappush(graph[i], (distBw(i,j), j))
+
+    visited = set()
+    pq = [(0,0)]
+    total_cost = 0
+    while pq:
+        cost, node = heapq.heappop(pq)
+        if node in visited: continue
+        visited.add(node)
+        total_cost += cost
+        for nextcost, next in graph[node]:
+            heapq.heappush(pq, (nextcost, next))
+    return(total_cost)
+    
+    
+
+
+
+
+
+
+minCostConnectPoints(points)
