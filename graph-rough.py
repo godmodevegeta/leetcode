@@ -660,11 +660,32 @@ def minCostConnectPoints(points: List[List[int]]) -> int:
             heapq.heappush(pq, (nextcost, next))
     return(total_cost)
     
-    
+    # 778. Swim in Rising Water
+grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
+# grid = [[0,2],[1,3]]
+# grid = [[10,12,4,6],
+#         [9,11,3,5],
+#         [1,7,13,8],
+#         [2,0,15,14]]
+def swimInWater(grid: List[List[int]]) -> int:
+    row, col = len(grid), len(grid[0])
+    end = (row - 1, col - 1)
+    visited = set()
+    path = []
+    pq = []
+    heapq.heappush(pq, (grid[0][0], 0, 0))
+    while pq:
+        print(pq)
+        cost, r, c = heapq.heappop(pq)
+        if (r,c) in visited: continue
+        visited.add((r,c))
+        path.append(grid[r][c])
+        if end == (r,c): return max(path)
+        directions = [(1,0),(-1,0),(0,1),(0,-1)]
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if (nr < 0 or nr >= row) or (nc < 0 or nc >= col) or (nr,nc) in visited: continue
+            heapq.heappush(pq, (grid[nr][nc],nr,nc))
 
-
-
-
-
-
-minCostConnectPoints(points)
+    print(path)
+print(swimInWater(grid))
