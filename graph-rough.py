@@ -688,4 +688,4 @@ def swimInWater(grid: List[List[int]]) -> int:
             heapq.heappush(pq, (grid[nr][nc],nr,nc))
 
     print(path)
-print(swimInWater(grid))
+
