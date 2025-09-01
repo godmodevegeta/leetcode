@@ -689,3 +689,35 @@ def swimInWater(grid: List[List[int]]) -> int:
 
     print(path)
 
+# 787. Cheapest Flights Within K Stops
+n = 4
+flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]]
+src = 0
+dst = 3
+k = 1
+def findCheapestPrice(n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+    graph = defaultdict(list)
+    for u, v, w in flights:
+        graph[u].append((v,w))
+    
+    dist = [float("inf")] * n
+    dist[src] = 0
+    queue = []
+    heapq.heappush(queue, (0, src, 0))
+    ans = 0
+    while queue:
+        curr_weight, node, stops = heapq.heappop(queue)
+        
+        if node == dst: return curr_weight
+        if stops > k: continue
+        ans = max(ans, curr_weight)
+        for neighbor, neighbor_weight in graph[node]:
+            if dist[node] + neighbor_weight < dist[neighbor]:
+                dist[neighbor] = dist[node] + neighbor_weight
+                heapq.heappush(queue, (dist[neighbor], neighbor, stops + 1))
+    return -1
+
+print(findCheapestPrice(n, flights, src, dst, k))
+
+
+
