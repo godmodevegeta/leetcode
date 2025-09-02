@@ -699,25 +699,60 @@ def findCheapestPrice(n: int, flights: List[List[int]], src: int, dst: int, k: i
     graph = defaultdict(list)
     for u, v, w in flights:
         graph[u].append((v,w))
-    
-    dist = [float("inf")] * n
-    dist[src] = 0
     queue = []
     heapq.heappush(queue, (0, src, 0))
-    ans = 0
+    dist = [float("inf")] * n
+    dist[src] = 0
     while queue:
         curr_weight, node, stops = heapq.heappop(queue)
-        
-        if node == dst: return curr_weight
         if stops > k: continue
-        ans = max(ans, curr_weight)
-        for neighbor, neighbor_weight in graph[node]:
-            if dist[node] + neighbor_weight < dist[neighbor]:
-                dist[neighbor] = dist[node] + neighbor_weight
-                heapq.heappush(queue, (dist[neighbor], neighbor, stops + 1))
-    return -1
+        for neighbor, neighbor_weight in graph[node]:             
+            next_weight = curr_weight + neighbor_weight  
+            if dist[neighbor] > next_weight:
+                dist[neighbor] = next_weight
+                heapq.heappush(queue, (next_weight, neighbor, stops + 1))
+    return dist[dst] if dist[dst] != float("inf") else -1
 
 print(findCheapestPrice(n, flights, src, dst, k))
 
+# 892 · Alien Dictionary
+words = ["wrt","wrf","er","ett","rftt"]
+words = ["abc","bcd","cde"]
+def alien_order(words: List[str]) -> str:
+    edges = set()
+    nodes = set()
+    for word in words:
+        for letter in word:
+            nodes.add(letter)
+    for i in range(len(words) - 1):
+        word_1 = words[i]
+        word_2 = words[i + 1]
+        length = min(len(word_1), len(word_2))
+        for j in range(length):
+            if word_1[j] == word_2[j]: continue
+            edges.add((word_1[j], word_2[j]))
+            break
+    graph = defaultdict(list)
+    in_degree = defaultdict(int)
+    for letter in nodes:
+        in_degree[letter] = 0
+    for u, v in edges:
+        graph[u].append(v)
+        in_degree[v] += 1
+    queue = deque()
+    path = []
+    for letter in nodes:
+        if in_degree[letter] == 0:
+            queue.append(letter)
+            path.append(letter)
+    while queue:
+        node = queue.popleft()
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+                path.append(neighbor)
+    return path if len(path) == len(nodes) else []
+# print(alien_order(words))
 
 
