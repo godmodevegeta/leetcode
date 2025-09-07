@@ -713,7 +713,7 @@ def findCheapestPrice(n: int, flights: List[List[int]], src: int, dst: int, k: i
                 heapq.heappush(queue, (next_weight, neighbor, stops + 1))
     return dist[dst] if dist[dst] != float("inf") else -1
 
-print(findCheapestPrice(n, flights, src, dst, k))
+# print(findCheapestPrice(n, flights, src, dst, k))
 
 # 892 · Alien Dictionary
 words = ["wrt","wrf","er","ett","rftt"]
@@ -755,4 +755,27 @@ def alien_order(words: List[str]) -> str:
     return path if len(path) == len(nodes) else []
 # print(alien_order(words))
 
-
+numCourses = 2
+prerequisites = [[1,0]]
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    parent = [i for i in range(numCourses)]
+    size = [1] * numCourses 
+    def find(x):
+        if parent[x] != x:
+            parent[x] = find(parent[x])
+        return parent[x]
+    def union(x, y):
+        px, py = find(x), find(y)
+        if px == py:
+            return False
+        if size[px] > size[py]:
+            parent[py] = px
+        elif size[py] > size[px]:
+            parent[px] = py
+        else:
+            parent[px] = py
+            size[py] += 1
+        return True
+    for a,b in prerequisites:
+        if not union(a,b): 
+            return False
