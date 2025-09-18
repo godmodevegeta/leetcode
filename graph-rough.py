@@ -779,3 +779,36 @@ def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
     for a,b in prerequisites:
         if not union(a,b): 
             return False
+
+# 1129. Shortest Path with Alternating Colors
+n = 4
+redEdges = [[0,1],[1,3],[3,2]]
+blueEdges = [[0,1],[1,2],[1,3],[0,3]]
+def shortestAlternatingPaths(n: int, redEdges: List[List[int]], blueEdges: List[List[int]]) -> List[int]:
+    graph = defaultdict(list)
+    for u, v in redEdges:
+        graph[u].append((v, "r"))
+    for u, v in blueEdges:
+        graph[u].append((v, "b"))
+    print(graph)
+    queue = deque()
+    queue.append((0,"r", 0))
+    queue.append((0,"b", 0))
+    visited = set()
+    ans = [float("INF")] * n
+    while queue:
+        node, color, steps = queue.popleft()
+        if (node, color) in visited: continue
+        visited.add((node, color))
+        ans[node] = min(ans[node], steps)
+        for neighbor, neighbor_color in graph[node]:
+            if color == "r" and neighbor_color == "b":
+                queue.append((neighbor, neighbor_color, steps + 1))
+            elif color == "b" and neighbor_color == "r":
+                queue.append((neighbor, neighbor_color, steps + 1))
+            else:
+                continue
+    return ans
+
+print(shortestAlternatingPaths(n, redEdges, blueEdges))    
+
