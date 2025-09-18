@@ -105,32 +105,32 @@ def bfs(graph, start):
 
 # print(checkIfPrerequisite(numCourses, prerequisites, queries))
 
-# class UnionFind:
-#     def __init__(self, n):
-#         self.parent = list(range(n))  # or: {i: i for i in range(n)}
-#         self.rank = [0] * n           # optional: for union by rank
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))  # or: {i: i for i in range(n)}
+        self.rank = [0] * n           # optional: for union by rank
 
-#     def find(self, x):
-#         if self.parent[x] != x:
-#             self.parent[x] = self.find(self.parent[x])  # path compression
-#         return self.parent[x]
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])  # path compression
+        return self.parent[x]
 
-#     def union(self, x, y):
-#         px, py = self.find(x), self.find(y)
-#         if px == py:
-#             return False  # already in the same set
-#         # union by rank (optional optimization)
-#         if self.rank[px] < self.rank[py]:
-#             self.parent[px] = py
-#         elif self.rank[px] > self.rank[py]:
-#             self.parent[py] = px
-#         else:
-#             self.parent[py] = px
-#             self.rank[px] += 1
-#         return True
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False  # already in the same set
+        # union by rank (optional optimization)
+        if self.rank[px] < self.rank[py]:
+            self.parent[px] = py
+        elif self.rank[px] > self.rank[py]:
+            self.parent[py] = px
+        else:
+            self.parent[py] = px
+            self.rank[px] += 1
+        return True
 
-    # def connected(self, x, y):
-    #     return self.find(x) == self.find(y)
+    def connected(self, x, y):
+        return self.find(x) == self.find(y)
     
 accounts = [["John","johnsmith@mail.com","john_newyork@mail.com"],
             ["John","johnsmith@mail.com","john00@mail.com"],
