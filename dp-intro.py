@@ -61,13 +61,25 @@ def canConstruct(target, wordBank, memo = {}):
                 memo[target] = True
                 return memo[target]
     return memo[target]
-    
+
+def countConstruct(target, wordBank, memo = {}):
+    if target in memo: return memo[target]
+    if target == "": return 1
+    count = 0
+    for word in wordBank:
+        wordLength = len(word)
+        if word == target[:wordLength]:
+            count += countConstruct(target[wordLength:], wordBank)
+    memo[target] = count
+    return count
+            
 
 
 if __name__ == "__main__":
-    print(canConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))
-    print(canConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))
-    print(canConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef", [
+    print(countConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))
+    print(countConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))
+    print(countConstruct("purple", ["purp", "p", "ur", "le", "purpl", "sk", "boar"]))
+    print(countConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef", [
         "e",
         "ee", 
         "eee", 
